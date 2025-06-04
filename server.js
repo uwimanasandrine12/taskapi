@@ -64,6 +64,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login
+// Login
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email } });
@@ -73,8 +74,19 @@ app.post('/login', async (req, res) => {
   if (!valid) return res.status(401).json({ error: 'Incorrect password' });
 
   const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET);
-  res.json({ message: 'Login successful', token });
+
+  // 🟢 UYU NIWO MURONGO DUTSINZEMO — dutanga na `user` object
+  res.json({
+    message: 'Login successful',
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    }
+  });
 });
+
 
 // Create Task
 app.post('/tasks', authenticateToken, async (req, res) => {
